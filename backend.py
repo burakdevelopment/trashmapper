@@ -81,9 +81,9 @@ class TrashEngine:
                 self.picam2.configure(config)
                 self.picam2.start()
                 self.cam_type = 'pi'
-                print("PiCamera2 Module 3 Başlatıldı.")
+                print("PiCamera2 Module 3 has been initialized.")
             except Exception as e:
-                print(f"PiCamera2 hatası: {e}. OpenCV'ye dönülüyor.")
+                print(f"PiCamera2 error: {e}. we are switching back to OpenCV.")
                 self.cam_type = 'cv'
                 self.cap = cv2.VideoCapture(0)
         else:
@@ -206,7 +206,7 @@ class TrashEngine:
             wgy = int((self.pose['y'] + waste_dy) / cell_m) + self.grid_center
             
             if 0 <= wgx < self.grid_size and 0 <= wgy < self.grid_size:
-                self.heat_grid[wgy, wgx] += 1 # Isıyı arttır
+                self.heat_grid[wgy, wgx] += 1 
                 
             
             self.detected_objects_log.append({
@@ -236,14 +236,14 @@ class TrashEngine:
         
         plt.figure(figsize=(10, 10))
         plt.imshow(self.heat_grid, cmap='hot', interpolation='nearest', origin='lower')
-        plt.colorbar(label='Atık Yoğunluğu')
-        plt.title("Atık Isı Haritası (GPS'siz - Göreceli Konum)")
+        plt.colorbar(label='Waste Density')
+        plt.title("Waste Heat Map (Without GPS - Relative Location)")
         
         center = self.grid_center
-        plt.plot(center, center, 'go', label='Başlangıç')
+        plt.plot(center, center, 'go', label='Beginning')
         
         end_y = int(self.pose['y'] / self.cfg['mapping']['cell_size_meter']) + center
-        plt.arrow(center, center, 0, end_y-center, color='blue', head_width=2, label='Güzergah')
+        plt.arrow(center, center, 0, end_y-center, color='blue', head_width=2, label='Route')
         plt.legend()
         
         heatmap_path = os.path.join(self.session_dir, "heatmap.png")
@@ -271,11 +271,11 @@ class TrashEngine:
         suggestions = []
         total = sum(counts.values())
         if "Cigarette" in counts and counts["Cigarette"] > 5:
-            suggestions.append("⚠️ Yüksek miktarda sigara izmariti: Bölgeye kül tablaları eklenmeli.")
+            suggestions.append("⚠️ High number of cigarette butts: Ashtrays should be added to the area.")
         if "Plastic bottle" in str(counts) or "Clear plastic bottle" in counts:
-            suggestions.append("⚠️ Plastik şişe yoğunluğu: Geri dönüşüm kutularının görünürlüğü artırılmalı.")
+            suggestions.append("⚠️ High density of plastic bottles: The visibility of recycling bins should be increased.")
         if total > 50:
-            suggestions.append("⚠️ Genel kirlilik yüksek: Temizlik periyodu sıklaştırılmalı.")
+            suggestions.append("⚠️ Overall pollution levels are high: Cleaning frequency should be increased.")
         
         report = {
             "session_dir": self.session_dir,

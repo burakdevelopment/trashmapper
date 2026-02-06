@@ -4,7 +4,7 @@ import time
 import numpy as np
 from backend import TrashEngine, COLORS
 
-st.set_page_config(page_title="TrashMapper Pro", layout="wide")
+st.set_page_config(page_title="TrashMapper", layout="wide")
 
 
 if 'engine' not in st.session_state:
@@ -17,12 +17,12 @@ engine = st.session_state.engine
 st.sidebar.title("♻️ TrashMapper V1")
 st.sidebar.info("Raspberry Pi 5 + Cam v3")
 
-mode = st.sidebar.radio("Mod", ["Canlı İzleme", "Oturum/Haritalama", "Raporlar"])
+mode = st.sidebar.radio("Mod", ["Live View", "Session/Mapping", "Reports"])
 
 fps_placeholder = st.sidebar.empty()
-obj_count_placeholder = st.sidebar.metric("Anlık Nesne", 0)
+obj_count_placeholder = st.sidebar.metric("Instant Object", 0)
 
-st.title("Akıllı Atık Tespit & Haritalama")
+st.title("Smart Waste Detection & Mapping")
 
 col1, col2 = st.columns([2, 1])
 
@@ -33,28 +33,28 @@ with col2:
     status_text = st.empty()
     if mode == "Oturum/Haritalama":
         if not engine.is_running:
-            if st.button("🚀 BAŞLAT (Haritalama)", type="primary"):
+            if st.button("🚀 START (Mapping)", type="primary"):
                 engine.start_session()
                 st.rerun()
         else:
-            st.warning("Kayıt ve Haritalama Aktif...")
-            st.write(f"Katedilen Mesafe (Tahmini): {engine.pose['y']:.1f} m")
-            if st.button("🛑 BİTİR ve Raporla"):
+            st.warning("Registration and Mapping Active...")
+            st.write(f"Distance Covered (Estimated): {engine.pose['y']:.1f} m")
+            if st.button("🛑 Finish and Report."):
                 report = engine.stop_session()
                 st.session_state.last_report = report
-                st.success("Rapor Oluşturuldu!")
+                st.success("Report Created!")
                 time.sleep(1)
                 st.rerun()
 
     if 'last_report' in st.session_state and mode == "Raporlar":
         rep = st.session_state.last_report
-        st.subheader("Son Oturum Özeti")
-        st.write(f"**Toplam Atık:** {rep['total_objects']}")
+        st.subheader("Last Session Summary")
+        st.write(f"**Total Waste:** {rep['total_objects']}")
         
-        st.image(rep['hist_path'], caption="Atık Dağılımı")
-        st.image(rep['heatmap_path'], caption="Sıcaklık Haritası")
+        st.image(rep['hist_path'], caption="Waste Distribution")
+        st.image(rep['heatmap_path'], caption="Temperature Map")
         
-        st.write("### 💡 Öneriler")
+        st.write("### 💡 Suggestions")
         for sug in rep['suggestions']:
             st.error(sug)
 
@@ -87,7 +87,7 @@ while run_loop:
     
     
     fps_placeholder.write(f"FPS: {fps:.1f}")
-    obj_count_placeholder.metric("Anlık Nesne", len(detections))
+    obj_count_placeholder.metric("Instant Object", len(detections))
     
     
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

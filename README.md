@@ -92,7 +92,7 @@ graph LR
 
 * No unnecessary complexity. Only files that actually matter:
 
-```mermaid
+```bash
 trashmapper/
 ├── config.yaml        # All system configuration (Camera, AI, Mapping)
 ├── backend.py         # Core engine (AI, Camera, Math, Tracking)

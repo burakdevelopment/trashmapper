@@ -1,0 +1,23 @@
+system:
+  headless: false  
+  save_dir: "data/sessions"
+
+camera:
+  type: "picamera2"  #"opencv"
+  width: 1280
+  height: 720
+  fps: 30
+  flip_vertical: false
+  flip_horizontal: false
+
+ai:
+  model_path: "models/best.onnx"
+  conf_thres: 0.25  
+  iou_thres: 0.45   
+  input_size: 640
+
+mapping:
+  grid_size_meter: 100  
+  cell_size_meter: 0.5  
+  virtual_speed: 1.0    
+  fov_horizontal: 66.0  

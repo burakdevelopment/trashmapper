@@ -13,8 +13,8 @@ Unlike legacy, over-engineered architectures, TrashMapper V2 follows a **Monolit
 
 ## 📸 Screenshots
 
-| Live Analysis Dashboard | Generated Heatmap Report |
-|:---:|:---:|
+| System Preview |
+|:---:|
 | <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/5555f9e7-e823-41d2-b588-da52f82962f8" /> |
 
 ---
